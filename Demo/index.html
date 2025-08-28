@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pyragogy Thesis Website</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="/image/logo.svg" alt="Pyragogy Logo" class="logo-img">
+    </div>
+    <h1>Cognitive Intraspecific Selection
+in Education</h1>
+    <p>From Individualism to Collective Strength</p>
+    <p>Autore: Fabrizio Terzi | ORCID ID: 0009-0004-7191-0455 | Pyragogy.org | 2025-2026</p>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#overview">Panoramica</a></li>
+      <li><a href="#thesis">Tesi</a></li>
+      <li><a href="#demos">Demo Tecnologiche</a></li>
+      <li><a href="#contact">Contatti</a></li>
+      <li><a href="prompts.html">Prompt AI</a></li>
+    </ul>
+  </nav>
+
+  <section id="overview">
+    <h2>Panoramica</h2>
+    <p>Questo sito presenta la tesi che introduce la Pyragogy, un nuovo paradigma educativo basato sulla selezione intraspecifica cognitiva. Lo scopo è trasformare i concetti teorici in esperienze interattive.</p>
+  </section>
+
+  <section id="thesis">
+    <h2>Tesi</h2>
+    <div class="pdf-viewer">
+      <iframe src="main.pdf" width="100%" height="600px"></iframe>
+    </div>
+  </section>
+
+  <section id="demos">
+    <h2>Demo Tecnologiche</h2>
+
+    <!-- Demo 1 -->
+    <div class="demo-container">
+      <h3>Ecosystem Health Monitor</h3>
+      <p>Mostra lo stato di salute di un ecosistema cognitivo con idee, partecipanti e qualità media.</p>
+      <div class="chart-demo">
+        <canvas id="ecosystemChart"></canvas>
+      </div>
+      <div class="metrics-demo">
+        <div class="metric-card">Active Ideas: <span id="metric-active">23</span></div>
+        <div class="metric-card">Evolving: <span id="metric-evolving">7</span></div>
+        <div class="metric-card">Participants: <span id="metric-participants">12</span></div>
+        <div class="metric-card">IQE Average: <span id="metric-iqe">8.2</span></div>
+      </div>
+    </div>
+
+    <!-- Demo 2 -->
+    <div class="demo-container">
+      <h3>Idea Evolution Simulator</h3>
+      <p>Le idee nascono, mutano e vengono selezionate. Puoi aggiungere idee o modificarne i parametri.</p>
+      <div class="simulator">
+        <div class="sim-controls">
+          <label>Mutation rate <input type="range" id="mutationRate" min="0" max="1" step="0.01" value="0.15"></label>
+          <label>Selection pressure <input type="range" id="selectionPressure" min="0" max="2" step="0.01" value="1.0"></label>
+          <button id="addIdea">Aggiungi Idea</button>
+          <button id="resetSim">Reset</button>
+        </div>
+        <svg id="ideasSvg" width="100%" height="320"></svg>
+      </div>
+    </div>
+
+    <!-- Demo 3 -->
+    <div class="demo-container">
+      <h3>Collaborative Feedback Loop</h3>
+      <p>Simula cicli di revisione tra partecipanti: ogni round migliora o peggiora la qualità delle idee.</p>
+      <canvas id="feedbackChart" height="200"></canvas>
+    </div>
+
+    <!-- Demo 4 -->
+    <div class="demo-container">
+      <h3>AI–Human Rhythm Analyzer</h3>
+      <p>Visualizza il ritmo cognitivo in un dialogo AI–umano come onde di interazione.</p>
+      <canvas id="rhythmChart" height="200"></canvas>
+    </div>
+
+    <!-- Demo 5 -->
+    <div class="demo-container">
+      <h3>Diversity vs Selection Trade-off</h3>
+      <p>Mostra come la pressione selettiva influisce sulla diversità delle idee.</p>
+      <canvas id="diversityChart" height="200"></canvas>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contatti</h2>
+    <p>Per ulteriori informazioni: <a href="mailto:fabrizio.terzi@pyragogy.org">fabrizio.terzi@pyragogy.org</a></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Fabrizio Terzi | Pyragogy.org</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

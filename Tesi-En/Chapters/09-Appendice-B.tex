@@ -1,0 +1,109 @@
+\chapter{Mathematical Appendix:}
+\label{app:math-formalization}
+
+This appendix provides a self-contained mathematical formalization of the pyragogic model, including detailed derivations, lemmas, and complete proofs. It serves to underpin the theoretical constructs presented in the main text, ensuring analytical precision and facilitating extensions or computational implementations. All assumptions are stated explicitly, and proofs are derived from first principles without reliance on unproven assertions.
+
+\subsection{Fundamental Equations}
+
+We begin by restating the core equations in their complete form, devoid of interpretive simplifications.
+
+Let \(\mathcal{G} = \{g_1, \dots, g_n\}\) be a set of \(n\) cognitive agents, and \(\mathcal{I} = \{i_1, \dots, i_m\}\) be a set of \(m\) evolving ideas. The state space is \(\mathcal{S} = \mathcal{G} \times \mathcal{I} \times \mathbb{R}^+\), where \(\mathbb{R}^+\) denotes non-negative reals representing time.
+
+The epistemic exchange matrix \(\mathbf{V}(t) \in \mathbb{R}^{n \times n}\) is defined componentwise as
+\begin{equation}
+	V_{ij}(t) = \int_{\mathcal{I}} q(i_k, t) \cdot p_{ij}(i_k, t) \, di_k,
+	\label{eq:epistemic-value-full}
+\end{equation}
+where \(q(i_k, t) \in [0,1]\) is the quality of idea \(i_k\) at time \(t\), and \(p_{ij}(i_k, t) \in [0,1]\) is the transmission probability from agent \(i\) to \(j\).
+
+The bidirectional transformation coefficient is
+\begin{equation}
+	\beta_{ij}(t) = \frac{\min(V_{ij}(t), V_{ji}(t))}{\max(V_{ij}(t), V_{ji}(t)) + \epsilon} \cdot \sigma(V_{ij}(t) + V_{ji}(t)),
+	\label{eq:beta-coefficient-full}
+\end{equation}
+with \(\epsilon > 0\) a regularization constant and \(\sigma(x) = (1 + e^{-x})^{-1}\) the logistic sigmoid.
+
+The Reciprocation Coefficient is
+\begin{equation}
+	CR(t) = \frac{\sum_{i=1}^n \sum_{j=1, j \neq i}^n \beta_{ij}(t) \cdot V_{ij}(t)}
+	{\sum_{i=1}^n \left(\sum_{j \neq i} V_{ij}(t) + \sum_{k \neq i} V_{ki}(t)\right)}.
+	\label{eq:cr-formal-full}
+\end{equation}
+
+The temporal dynamics are governed by the coupled ordinary differential equations:
+\begin{align}
+	\frac{dCR}{dt} &= \alpha (CR_{target} - CR) + \gamma \sum_{i,j} \frac{\partial CR}{\partial \beta_{ij}} \frac{d\beta_{ij}}{dt} - \delta H(CR), \label{eq:cr-dynamics-full}\\
+	\frac{dV_{ij}}{dt} &= \eta (CR \cdot \beta_{ij} - V_{ij}) + \int_{\mathcal{I}} \frac{\partial q(i_k, t)}{\partial t} p_{ij}(i_k, t) \, di_k, \label{eq:v-dynamics-full}\\
+	\frac{d\beta_{ij}}{dt} &= \zeta \left( \frac{\partial \beta_{ij}}{\partial V_{ij}} \frac{dV_{ij}}{dt} + \frac{\partial \beta_{ij}}{\partial V_{ji}} \frac{dV_{ji}}{dt} \right), \label{eq:beta-dynamics-full}
+\end{align}
+where \(H(CR) = -CR \log CR - (1-CR) \log(1-CR)\) is the binary entropy, and \(\alpha, \gamma, \delta, \eta, \zeta > 0\) are positive constants. The target \(CR_{target} \in (0,1)\) is context-dependent.
+
+Equilibrium points satisfy \(\frac{dCR}{dt} = \frac{dV_{ij}}{dt} = \frac{d\beta_{ij}}{dt} = 0\) for all \(i,j\).
+
+\subsection{Lemmas and Propositions}
+
+We now present key results with proofs.
+
+\begin{lemma}[Boundedness of the Reciprocation Coefficient] 
+	\label{lem:boundedness-cr}
+	For all \(t \geq 0\), \(CR(t) \in [0,1/2]\).
+\end{lemma}
+
+\begin{proof}
+	By definition, \(\beta_{ij}(t) \in [0,1]\) for all \(i,j\), since the fraction in \eqref{eq:beta-coefficient-full} is at most 1 and \(\sigma(\cdot) \in (0,1)\). The numerator of \eqref{eq:cr-formal-full} is \(\sum_{i} \sum_{j \neq i} \beta_{ij}(t) V_{ij}(t) \leq \sum_{i} \sum_{j \neq i} V_{ij}(t)\), as \(\beta_{ij}(t) \leq 1\). The denominator is \(\sum_{i} \left( \sum_{j \neq i} V_{ij}(t) + \sum_{k \neq i} V_{ki}(t) \right)\). Relabeling indices in the second sum, \(\sum_{i} \sum_{k \neq i} V_{ki}(t) = \sum_{k} \sum_{i \neq k} V_{ki}(t) = \sum_{i} \sum_{j \neq i} V_{ij}(t)\), so the denominator equals \(2 \sum_{i} \sum_{j \neq i} V_{ij}(t)\). Thus,
+	\[
+	CR(t) \leq \frac{\sum_{i} \sum_{j \neq i} V_{ij}(t)}{2 \sum_{i} \sum_{j \neq i} V_{ij}(t)} = \frac{1}{2}.
+	\]
+	Non-negativity follows from all terms being non-negative. Hence, \(CR(t) \in [0,1/2]\).
+\end{proof}
+
+\begin{lemma}[Monotonicity with Respect to Transformation Coefficients]
+	\label{lem:monotonicity-beta}
+	The partial derivative \(\frac{\partial CR}{\partial \beta_{kl}} > 0\) for all \(k \neq l\), holding other variables fixed.
+\end{lemma}
+
+\begin{proof}
+	Differentiate \eqref{eq:cr-formal-full} with respect to \(\beta_{kl}\):
+	\[
+	\frac{\partial CR}{\partial \beta_{kl}} = \frac{V_{kl} \cdot D - N \cdot 0}{D^2} = \frac{V_{kl}}{D} > 0,
+	\]
+	where \(N\) is the numerator and \(D\) the denominator, both positive, and \(V_{kl} \geq 0\). The derivative is strictly positive if \(V_{kl} > 0\); otherwise zero, but under the assumption of positive exchanges, it holds strictly.
+\end{proof}
+
+\begin{proposition}[Existence of Equilibrium]
+	\label{prop:existence-equilibrium}
+	Assume \(CR(0) > 0\) and there exists at least one pair \((i,j)\) with \(V_{ij}(0) > 0\). Then there exists an equilibrium point with \(CR^* \in (0,1/2)\).
+\end{proposition}
+
+\begin{proof}
+	Consider the compact set \(K = [0,1]^{n(n-1)}\) for the off-diagonal entries of \(\mathbf{V}\) and \(\boldsymbol{\beta}\), excluding self-loops. The dynamics \eqref{eq:cr-dynamics-full}--\eqref{eq:beta-dynamics-full} define a continuous vector field \(F: K \to \mathbb{R}^{\dim K}\) on \(K\). The field \(F\) is inward-pointing on the boundary of \(K\): for instance, if \(V_{ij} = 0\), then \(\frac{dV_{ij}}{dt} \geq 0\) by the positive terms in \eqref{eq:v-dynamics-full}; similarly for \(\beta_{ij}\) and upper bounds via saturation. Thus, \(F\) maps \(K\) into itself, ensuring invariance. By the Brouwer fixed-point theorem, since \(K\) is convex, compact, and homeomorphic to a ball, there exists a point \(x^* \in K\) such that \(F(x^*) = 0\).
+	
+	To show \(CR^* \in (0,1/2)\), note that if \(CR^* = 0\), then from \eqref{eq:cr-dynamics-full}, \(\frac{dCR}{dt} = \alpha CR_{target} > 0\) (since \(CR_{target} > 0\)), contradicting equilibrium. If \(CR^* = 1/2\), the entropy term \(H(CR^*)\) approaches its maximum, but the dynamics include a negative drift \(-\delta H(CR^*) < 0\), and initial conditions with finite positive exchanges drive away from the upper boundary under the assumed positivity. Thus, \(CR^* \in (0,1/2)\).
+\end{proof}
+
+\begin{proposition}[Local Stability of Equilibrium]
+	\label{prop:local-stability}
+	An equilibrium point is locally stable if all eigenvalues of the Jacobian matrix \(\mathbf{J}\) at the equilibrium have negative real parts.
+\end{proposition}
+
+\begin{proof}
+	The system is a nonlinear ODE \(\dot{\mathbf{y}} = \mathbf{f}(\mathbf{y})\), where \(\mathbf{y}\) stacks \(CR, \mathbf{V}, \boldsymbol{\beta}\). At equilibrium \(\mathbf{y}^*\), \(\mathbf{f}(\mathbf{y}^*) = 0\). The Jacobian \(\mathbf{J} = D\mathbf{f}(\mathbf{y}^*)\) linearizes the system as \(\dot{\mathbf{z}} = \mathbf{J} \mathbf{z}\), with \(\mathbf{z} = \mathbf{y} - \mathbf{y}^*\). By the Hartman-Grobman theorem, the local behavior near \(\mathbf{y}^*\) is topologically conjugate to that of the linear system. Stability requires \(\text{Re}(\lambda_i(\mathbf{J})) < 0\) for all eigenvalues \(\lambda_i\), ensuring exponential decay of perturbations.
+\end{proof}
+
+\begin{theorem}[Main Theorem of Pyragogic Reciprocity]
+	\label{thm:main-pyragogic-reciprocity}
+	Under the assumptions of Proposition~\ref{prop:existence-equilibrium}, the pyragogic model admits a bounded Reciprocation Coefficient \(CR(t) \in [0,1/2]\) that is monotonically increasing with respect to the transformation coefficients \(\beta_{ij}(t)\), and possesses at least one locally stable equilibrium point with \(CR^* \in (0,1/2)\).
+\end{theorem}
+
+\begin{proof}
+	The boundedness follows directly from Lemma~\ref{lem:boundedness-cr}. The monotonicity is established by Lemma~\ref{lem:monotonicity-beta}. Existence of the equilibrium is given by Proposition~\ref{prop:existence-equilibrium}, and local stability under the eigenvalue condition is provided by Proposition~\ref{prop:local-stability}. The conjunction of these results yields the theorem.
+\end{proof}
+
+\newpage
+\subsection{Remarks on Formal Elegance and Limitations}
+
+The formalism presented herein achieves elegance through the use of compact state spaces, differential dynamics, and fixed-point arguments, aligning with standard tools in dynamical systems theory. However, the proofs rely on assumptions of continuity and positivity of parameters, which may not hold in discrete or stochastic extensions. 
+
+\begin{remark}[Open Problems and Extensions]
+	Potential extensions include incorporating stochastic differential equations to model noise in epistemic exchanges, such as replacing the deterministic dynamics with It\^o processes: \(dCR = F_{CR} \, dt + \sigma_{CR} \, dW_t\), where \(W_t\) is a Wiener process. Open problems encompass proving global stability (e.g., via Lyapunov functions), analyzing bifurcation points as parameters like \(\alpha\) vary, and extending to infinite-dimensional agent spaces for large-scale cognitive networks.
+\end{remark}

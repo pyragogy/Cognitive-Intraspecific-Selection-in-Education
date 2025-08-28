@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECOSYSTEM HEALTH Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1e1e1e;
+                --text-color: #e0e0e0;
+                --border-color: #444444;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            padding: 12px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #2E7D32;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>ECOSYSTEM HEALTH</h2>
+        <div class="chart-container">
+            <canvas id="ecosystemChart"></canvas>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <strong>Active Ideas:</strong> 23 → Evolving: 7
+            </div>
+            <div class="metric-card">
+                <strong>Participants:</strong> 12 Contributing: 11
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const config = {
+            type: 'bar',
+            data: {
+                labels: ['IQE Average', 'Reciprocity', 'Diversity', 'Resilience'],
+                datasets: [{
+                    label: 'Metric Scores',
+                    data: [8.2, 9.1, 8.0, 9.5],
+                    backgroundColor: [
+                        '#4CAF50', 
+                        '#45A049', 
+                        '#81C784', 
+                        '#388E3C'
+                    ],
+                    borderColor: '#2E7D32',
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    hoverBackgroundColor: '#C8E6C9'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Score (0-10)',
+                            color: 'var(--text-color)'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        },
+                        ticks: {
+                            color: 'var(--text-color)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: 'var(--text-color)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'ECOSYSTEM HEALTH',
+                        font: {
+                            size: 22,
+                            weight: 'bold'
+                        },
+                        color: '#2E7D32',
+                        padding: {
+                            bottom: 20
+                        },
+                        subtitle: {
+                            display: true,
+                            text: 'Overall Health: 87% (Healthy)',
+                            font: {
+                                size: 16,
+                                style: 'italic'
+                            },
+                            color: '#4CAF50',
+                            padding: {
+                                top: 5
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 20,
+                        bottom: 20
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('ecosystemChart').getContext('2d');
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>

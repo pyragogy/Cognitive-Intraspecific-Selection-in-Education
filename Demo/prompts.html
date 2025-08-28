@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pyragogy – Prompt AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header small">
+    <div class="brand">
+      <img src="/image/logo.svg" alt="Pyragogy Logo" class="logo-img">
+      <div>
+        <h1>Prompt di Sistema per Studiare la Tesi con AI</h1>
+        <p class="subtitle">Raccolta organizzata di prompt per analisi, critica e simulazioni.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="btn-link">Home</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Prompt di Analisi</h2>
+      <div class="prompt">
+        <pre id="p-analysis">
+Sei un AI Assistant che analizza la coerenza logica della tesi "Selezione Intraspecifica Riformulata in Pedagogia Pyragogica".
+1) Riassumi le tesi principali in 5 punti.
+2) Individua 3 assunzioni non testate.
+3) Suggerisci due esperimenti di validazione.
+4) Restituisci i limiti metodologici e suggerimenti per migliorare la replicabilità.
+        </pre>
+        <button class="copyBtn" data-target="p-analysis">Copia</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Prompt di Critica (Peer Review)</h2>
+      <div class="prompt">
+        <pre id="p-critique">
+Assumi il ruolo di peer reviewer accademico. Valuta la struttura argomentativa, la consistenza delle prove e la rilevanza delle conclusioni. Fornisci:
+- Un abstract alternativo di 150 parole.
+- Tre suggerimenti essenziali per la revisione.
+- Una lista di riferimenti teorici mancanti o utili.
+        </pre>
+        <button class="copyBtn" data-target="p-critique">Copia</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Prompt di Simulazione</h2>
+      <div class="prompt">
+        <pre id="p-sim">
+Simula un dibattito tra due agenti AI:
+- Agente A: difende l'idea che la selezione intraspecifica migliora la qualità delle idee.
+- Agente B: sostiene che introduce bias e perdita di diversità.
+Dai 5 scambi, poi una sintesi con punti di convergenza.
+        </pre>
+        <button class="copyBtn" data-target="p-sim">Copia</button>
+      </div>
+    </section>
+
+    <section class="card small">
+      <h3>Note</h3>
+      <p>Ogni prompt è pronto per essere incollato in un'interfaccia di AI (Flowise, chat, ecc.). In futuro collegheremo questi prompt a un retriever o a un'interfaccia che ne permetta l'esecuzione diretta.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2025 Fabrizio Terzi | Pyragogy.org</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function copyText(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const txt = el.innerText;
+        navigator.clipboard?.writeText(txt).then(() => {
+          alert('Prompt copiato negli appunti');
+        }).catch(() => {
+          // fallback
+          const ta = document.createElement('textarea');
+          ta.value = txt;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          alert('Prompt copiato (fallback)');
+        });
+      }
+      document.querySelectorAll('.copyBtn').forEach(btn => {
+        btn.addEventListener('click', () => copyText(btn.dataset.target));
+      });
+    });
+  </script>
+</body>
+</html>
